@@ -3,19 +3,20 @@ package cache
 import (
 	"context"
 	"encoding/json"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"time"
+
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 type EmptyRoomCache struct {
-	roomName []string
-	lastTime int64
+	RoomName []string `json:"roomName"`
+	LastTime int64    `json:"lastTime"`
 }
 
 func SetEmptyRoomCache(ctx context.Context, key string, emptyRoomList []string) {
 	emptyRoomCache := &EmptyRoomCache{
-		roomName: emptyRoomList,
-		lastTime: time.Now().Unix(),
+		RoomName: emptyRoomList,
+		LastTime: time.Now().Unix(),
 	}
 	emptyRoomJson, err := json.Marshal(emptyRoomCache)
 	// 10分钟过期
@@ -29,10 +30,12 @@ func GetEmptyRoomCache(ctx context.Context, key string) (emptyRoomList []string,
 	if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal([]byte(data), &emptyRoomList)
+	emptyRoomCache := new(EmptyRoomCache)
+	err = json.Unmarshal([]byte(data), &emptyRoomCache)
 	if err != nil {
 		return nil, err
 	}
+	emptyRoomList = emptyRoomCache.RoomName
 	return
 }
 func IsExistRoomInfo(ctx context.Context, key string) (exist int64, err error) {

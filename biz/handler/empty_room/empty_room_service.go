@@ -35,4 +35,5 @@ func GetEmptyRoom(ctx context.Context, c *app.RequestContext) {
 	}
 	resp.Base = pack.BuildBaseResp(nil)
 	resp.RoomName = empty_room
+	pack.SendResponse(c, resp)
 }
