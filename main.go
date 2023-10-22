@@ -13,7 +13,7 @@ func Init() {
 }
 func main() {
 	h := server.Default()
-	dal.Init()
+	Init()
 	register(h)
 	h.Spin()
 }
